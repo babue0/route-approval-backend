@@ -1,6 +1,7 @@
 package com.br.rotaaprovacao.domain.user;
 
 
+import com.br.rotaaprovacao.dtos.UserDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,4 +26,11 @@ public class User {
   private String password;
 
   private String targetExam;
+
+  public User(UserDTO data){
+    this.name = data.name();
+    this.email = data.email();
+    this.password = data.password();
+    this.targetExam = data.targetExam();
+  }
 }

@@ -1,5 +1,6 @@
 package com.br.rotaaprovacao.domain.subject;
 
+import com.br.rotaaprovacao.dtos.SubjectDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,4 +20,9 @@ public class Subject {
   private String name;
 
   private Integer importanceWeight;
+
+  public Subject(SubjectDTO data){
+    this.name = data.name();
+    this.importanceWeight = data.importanceWeight();
+  }
 }
