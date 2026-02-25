@@ -6,6 +6,7 @@ import com.br.rotaaprovacao.dtos.SprintDTO;
 import com.br.rotaaprovacao.repositories.SprintRepository;
 import com.br.rotaaprovacao.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,17 +20,15 @@ public class SprintService {
 
   public Sprint createSprint(SprintDTO data) throws Exception{
 
-    User user = userRepository.findById(data.userId()).orElseThrow(() -> new Exception("User not found"));
+    User loggedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-    if (data.endDate().isBefore(data.startDate())) {
-      throw new Exception("End date is before start date");
-    }
 
     Sprint sprint = new Sprint();
-    sprint.setUser(user);
     sprint.setStartDate(data.startDate());
     sprint.setEndDate(data.endDate());
     sprint.setGoal(data.goal());
+
+    sprint.setUser(loggedUser);
 
     return sprintRepository.save(sprint);
   }

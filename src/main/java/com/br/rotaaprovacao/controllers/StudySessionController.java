@@ -1,12 +1,14 @@
 package com.br.rotaaprovacao.controllers;
 
 import com.br.rotaaprovacao.domain.session.StudySession;
+import com.br.rotaaprovacao.domain.user.User;
 import com.br.rotaaprovacao.dtos.StudySessionDTO;
 import com.br.rotaaprovacao.repositories.StudySessionRepository;
 import com.br.rotaaprovacao.services.StudySessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,7 +32,9 @@ public class StudySessionController {
 
   @GetMapping
   public ResponseEntity<List<StudySession>> getAllSessions() {
-    List<StudySession> sessions = repository.findAll();
+    User loggedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+    List<StudySession> sessions = repository.findBySprintUser(loggedUser);
     return new ResponseEntity<>(sessions, HttpStatus.OK);
   }
 
