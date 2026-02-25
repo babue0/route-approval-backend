@@ -6,13 +6,12 @@ import com.br.rotaaprovacao.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
+@CrossOrigin(origins = "*")
 public class UserController {
 
   @Autowired
@@ -20,7 +19,11 @@ public class UserController {
 
   @PostMapping
   public ResponseEntity<User> createUser(@RequestBody UserDTO data){
+    String ecryptedPassword = new BCryptPasswordEncoder().encode(data.password());
+
     User newUser = new User(data);
+    newUser.setPassword(ecryptedPassword);
+
     this.repository.save(newUser);
     return new ResponseEntity<>(newUser, HttpStatus.CREATED);
   }
